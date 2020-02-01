@@ -26,7 +26,7 @@ It uses:
 
 ## About the Site
 
-Here's a brief rundown: https://googleyasheck.com/flash-cards-site-complete/
+Here's a brief rundown: https://startupnextdoor.com/flash-cards-site-complete/
 
 ## Screenshots
 
@@ -87,9 +87,32 @@ Thanks [@eyedol](https://github.com/eyedol)
 1. When you're ready to start memorizing, click either "General" or "Code"
     in the top menu.
 
+## How to run it on local host (Quick Guide)
+
+*Provided by [@devyash](https://github.com/devyash) - devyashsanghai@gmail.com - Reach out to this contributor if you have trouble.*
+
+1. Install dependencies:
+  1. Install [Python ](https://www.python.org/download/releases/2.7/)
+  2. Add python as environment variable [windows](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7)
+  3. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
+  4. Run ```python get-pip.py```in terminal
+  5. Add pip to your PATH system variable [windows](https://stackoverflow.com/questions/23708898/pip-is-not-recognized-as-an-internal-or-external-command)
+  6. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
+2. Open flash_cards.py and uncomment the line 52-55 beginning from ``` @app.route('/initdb')```
+3. Type ```python flash_cards.py``` - if you get error for flask then use ```python -m pip install Flask``` first then run ```flash_card.py``` file 
+4. Open localhost:5000/initdb
+5. Login using id:USERNAME='admin', PASSWORD='default. 
+6. Comment the line 52-55 in flash_cards.py
+
+NOTE: If you wish to use John's flash cards then also do following steps:
+1. Copy db files such as ```cards-jwasham-extreme``` OR ```cards-jwasham``` and paste them in db folder
+2. Edit file ```flash_cards.py``` line 11 and replace cards with any of the other database files
+3. Repeat the above steps from step 3
+Every time you wish to run your db just open folder in terminal and run  ```python flash_cards.py```
+
 ## How to run with Docker
 
-*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com - Reach out to this contributor if you have trouble.*
 
 __Make sure you already installed [docker](https://www.docker.com)__
 
@@ -102,11 +125,13 @@ __Make sure you already installed [docker](https://www.docker.com)__
 
 __If you already had a backup file `cards.db`. Run following command:__
 *Note: We don't need to rebuild image, just delete old container if you already built.*
-`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`.
+`docker run -d -p 8000:8000 --name cs-flash-cards -v <path_to_folder_contains_cards_db>:/src/db cs-flash-cards`.
 `<path_to_folder_contains_cards_db>`: is the full path contains `cards.db`.
 Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
 
 For convenience, if you don't have `cards.db`, this container will auto copy a new one from `cards-empty.db`.
+
+---
 
 ### How to backup data ?
 We just need store `cards.db` file, and don't need any sql command.
@@ -118,6 +143,28 @@ We just need store `cards.db` file, and don't need any sql command.
 - Build a new one with `-v flag`:
 `docker run -d -p 8000:8000 --name cs-flash-cards -v <path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
 - Voila :)
+
+### How to deploy docker file on heroku
+
+- first install [heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+- change `entrypoint.sh`
+```
+- export CARDS_SETTINGS=/src/config.txt
+gunicorn --bind  0.0.0.0:$8000 flash_cards:app
++ export CARDS_SETTINGS=/src/config.txt
+gunicorn --bind  0.0.0.0:$PORT flash_cards:app
+```
+- deploy docker file with following commands
+
+```shell
+heroku login
+heroku container:login
+heroku create 
+# Creating app... done, ⬢ your-app-name
+heroku container:push web --app your-app-name
+heroku container:release web --app your-app-name
+heroku open --app your-app-name
+```
 
 ## Alternative for Node fans
 
